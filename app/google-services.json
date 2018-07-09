@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "792518484293",
+    "firebase_url": "https://twitter-a9d33.firebaseio.com",
+    "project_id": "twitter-a9d33",
+    "storage_bucket": "twitter-a9d33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:792518484293:android:65a85bd09b6c081a",
+        "android_client_info": {
+          "package_name": "com.example.tianhao.twitter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "792518484293-e571qdml95hl70t62srr3edk7porq2d6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGwB7-47wt9BBllAWXZ9Q8pw70cC1XMgU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
