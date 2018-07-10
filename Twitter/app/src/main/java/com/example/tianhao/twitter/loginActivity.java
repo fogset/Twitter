@@ -30,6 +30,10 @@ public class loginActivity extends AppCompatActivity {
 
         emailEdit = findViewById(R.id.emailEditText);
         passwordEdit = findViewById(R.id.passwordEditText);
+
+        if(currentUser != null){
+            logIn();
+        }
     }
     public void SignUp(View view){
         email = emailEdit.getText().toString();
