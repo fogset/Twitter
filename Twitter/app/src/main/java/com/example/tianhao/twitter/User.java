@@ -1,15 +1,26 @@
 package com.example.tianhao.twitter;
 
+import java.util.List;
+
 public class User {
     private String email;
-    private String following;
+    private List following;
 
     public User(){
 
     }
 
-    public User(String email, String following) {
+
+    public User(String email, List following) {
         this.email = email;
+        this.following = following;
+    }
+
+    public List getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List following) {
         this.following = following;
     }
 
@@ -17,15 +28,8 @@ public class User {
         return email;
     }
 
-    public String getFollowing() {
-        return following;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setFollowing(String following) {
-        this.following = following;
-    }
 }

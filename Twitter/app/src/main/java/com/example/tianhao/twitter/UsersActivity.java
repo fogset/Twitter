@@ -21,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class UsersActivity extends AppCompatActivity {
     ArrayList<String> users = new ArrayList<>();
@@ -31,6 +33,9 @@ public class UsersActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     String[] currentLogINUser;
     User user;
+    String[] names = {"John","Tim","Sam","Ben"};
+    List nameList = new ArrayList<String>(Arrays.asList(names));
+    List hello;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +58,8 @@ public class UsersActivity extends AppCompatActivity {
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 if (checkedTextView.isChecked()) {
                     Log.i("Info", "Checked!");
-                    FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(users.get(position));
+                    //FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
+                    Log.i("name list",String.valueOf(nameList.get(0)));
                 } else {
                     Log.i("Info", "Not Checked!");
                 }
@@ -61,30 +67,6 @@ public class UsersActivity extends AppCompatActivity {
         });
 
 
-//        FirebaseDatabase.getInstance().getReference().child("users").addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                users.clear();
-//                for (DataSnapshot emailFireBase : dataSnapshot.getChildren()) {
-//                    String emailReceived = String.valueOf(emailFireBase.getValue());
-//                    if (emailReceived != null) {
-//                        users.add(emailReceived);
-//                        String[] tempUserName = emailReceived.split("\\.");
-//                        usersName.add(tempUserName[0]);
-//                    }
-//                    Log.i("receive message", emailReceived);
-//                }
-//                adapter.notifyDataSetChanged();
-//            }
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) { }
-//        });
 
         FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
@@ -95,16 +77,18 @@ public class UsersActivity extends AppCompatActivity {
 
                         user = emailFireBase.getValue(User.class);
                         users.add(user.getEmail());
-                        //String[] tempUserName = emailReceived.split("\\.");
+                        hello = user.getFollowing();
+                        //users.add((String) hello.get(0));
                         //usersName.add(tempUserName[0]);
                     }
-                    //Log.i("receive message", emailReceived);
+                    //Log.i("receive message",String.valueOf(nameList.get(1)));
                 }
                 adapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+        //Log.i("name list",String.valueOf(nameList.get(0)));
     }
 
 }
