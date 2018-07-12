@@ -51,7 +51,7 @@ public class UsersActivity extends AppCompatActivity {
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 if (checkedTextView.isChecked()) {
                     Log.i("Info", "Checked!");
-                    FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(users.get(position));
+                    //FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(users.get(position));
                 } else {
                     Log.i("Info", "Not Checked!");
                 }
@@ -59,28 +59,49 @@ public class UsersActivity extends AppCompatActivity {
         });
 
 
-        FirebaseDatabase.getInstance().getReference().child("users").addChildEventListener(new ChildEventListener() {
+//        FirebaseDatabase.getInstance().getReference().child("users").addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                users.clear();
+//                for (DataSnapshot emailFireBase : dataSnapshot.getChildren()) {
+//                    String emailReceived = String.valueOf(emailFireBase.getValue());
+//                    if (emailReceived != null) {
+//                        users.add(emailReceived);
+//                        String[] tempUserName = emailReceived.split("\\.");
+//                        usersName.add(tempUserName[0]);
+//                    }
+//                    Log.i("receive message", emailReceived);
+//                }
+//                adapter.notifyDataSetChanged();
+//            }
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) { }
+//        });
+
+        FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                users.clear();
                 for (DataSnapshot emailFireBase : dataSnapshot.getChildren()) {
                     String emailReceived = String.valueOf(emailFireBase.getValue());
                     if (emailReceived != null) {
                         users.add(emailReceived);
-                        String[] tempUserName = emailReceived.split("\\.");
-                        usersName.add(tempUserName[0]);
+                        //String[] tempUserName = emailReceived.split("\\.");
+                        //usersName.add(tempUserName[0]);
                     }
                     Log.i("receive message", emailReceived);
                 }
                 adapter.notifyDataSetChanged();
             }
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-            @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
+
 }
