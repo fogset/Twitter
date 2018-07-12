@@ -30,12 +30,14 @@ public class UsersActivity extends AppCompatActivity {
     String currentEmail;
     FirebaseUser currentUser;
     String[] currentLogINUser;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
         setTitle("User List");
 
+        user = new User();
         ListView listView = findViewById(R.id.userListView);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         mAuth = FirebaseAuth.getInstance();
@@ -51,7 +53,7 @@ public class UsersActivity extends AppCompatActivity {
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 if (checkedTextView.isChecked()) {
                     Log.i("Info", "Checked!");
-                    //FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(users.get(position));
+                    FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(users.get(position));
                 } else {
                     Log.i("Info", "Not Checked!");
                 }
@@ -89,13 +91,14 @@ public class UsersActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 users.clear();
                 for (DataSnapshot emailFireBase : dataSnapshot.getChildren()) {
-                    String emailReceived = String.valueOf(emailFireBase.getValue());
-                    if (emailReceived != null) {
-                        users.add(emailReceived);
+                    if (emailFireBase != null) {
+
+                        user = emailFireBase.getValue(User.class);
+                        users.add(user.getEmail());
                         //String[] tempUserName = emailReceived.split("\\.");
                         //usersName.add(tempUserName[0]);
                     }
-                    Log.i("receive message", emailReceived);
+                    //Log.i("receive message", emailReceived);
                 }
                 adapter.notifyDataSetChanged();
             }
