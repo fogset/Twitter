@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class UsersActivity extends AppCompatActivity {
@@ -59,7 +60,8 @@ public class UsersActivity extends AppCompatActivity {
                 if (checkedTextView.isChecked()) {
                     Log.i("Info", "Checked!");
                     //FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
-                    Log.i("name list",String.valueOf(nameList.get(0)));
+                   // Log.i("inside hello",String.valueOf(hello.get(0)));
+                    //Log.i("name list",String.valueOf(nameList.get(0)));
                 } else {
                     Log.i("Info", "Not Checked!");
                 }
@@ -68,20 +70,26 @@ public class UsersActivity extends AppCompatActivity {
 
 
 
-        FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("users").child("a@b").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 users.clear();
                 for (DataSnapshot emailFireBase : dataSnapshot.getChildren()) {
-                    if (emailFireBase != null) {
 
-                        user = emailFireBase.getValue(User.class);
-                        users.add(user.getEmail());
-                        hello = user.getFollowing();
-                        //users.add((String) hello.get(0));
+                        String usera = dataSnapshot.child("email").getValue(String.class);
+                        //user = emailFireBase.getValue(User.class);
+                        users.add(usera);
+                        //hello = user.getFollowing();
+                        //users.add(String.valueOf( hello.get(0)));
+                        //Log.i("receive message",String.valueOf(hello.get(0)));
                         //usersName.add(tempUserName[0]);
-                    }
+
                     //Log.i("receive message",String.valueOf(nameList.get(1)));
+                }
+                for (DataSnapshot childSnapshot: dataSnapshot.child("is Following").getValue(String.class)) {
+                    System.out.println(childSnapshot.getValue(String.class));
+                    Log.i("whats inside",childSnapshot.getValue(String.class));
+                    hello = Collections.singletonList(childSnapshot.getValue(String.class));
                 }
                 adapter.notifyDataSetChanged();
             }
