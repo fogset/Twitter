@@ -36,8 +36,7 @@ public class UsersActivity extends AppCompatActivity {
     String[] currentLogINUser;
     User user;
     String[] names = {"John","Tim","Sam","Ben"};
-    String[] following = {};
-    List nameList = new ArrayList<String>(Arrays.asList(following));
+    List<String> nameList = new ArrayList();
     List hello;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +65,10 @@ public class UsersActivity extends AppCompatActivity {
                     FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
 
                 } else {
+                    Log.i("Info", "Not Checked!");
                     nameList.remove(users.get(position));
                     Log.i("after remove",String.valueOf(nameList));
                     FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
-                    Log.i("Info", "Not Checked!");
-
                 }
             }
         });
@@ -96,8 +94,8 @@ public class UsersActivity extends AppCompatActivity {
 
                     //Log.i("receive message",String.valueOf(nameList.get(1)));
                 }
-                List<String> children = dataSnapshot.child(currentLogINUser[0]).child("isFollowing").getValue(new GenericTypeIndicator<List<String>>(){});
-                Log.i("inside list is ", String.valueOf(children));
+                nameList= dataSnapshot.child(currentLogINUser[0]).child("isFollowing").getValue(new GenericTypeIndicator<List<String>>(){});
+                Log.i("inside namelist is ", String.valueOf(nameList));
 
                 adapter.notifyDataSetChanged();
             }
