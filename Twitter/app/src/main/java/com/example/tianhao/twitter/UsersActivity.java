@@ -35,7 +35,8 @@ public class UsersActivity extends AppCompatActivity {
     String[] currentLogINUser;
     User user;
     String[] names = {"John","Tim","Sam","Ben"};
-    List nameList = new ArrayList<String>(Arrays.asList(names));
+    String[] following = {};
+    List nameList = new ArrayList<String>(Arrays.asList(following));
     List hello;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +60,13 @@ public class UsersActivity extends AppCompatActivity {
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 if (checkedTextView.isChecked()) {
                     Log.i("Info", "Checked!");
-                    //FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
+                    nameList.add(users.get(position));
+                    FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
                    // Log.i("inside hello",String.valueOf(hello.get(0)));
                     //Log.i("name list",String.valueOf(nameList.get(0)));
                 } else {
+                    nameList.remove(users.get(position));
+                    FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
                     Log.i("Info", "Not Checked!");
                 }
             }
@@ -70,15 +74,16 @@ public class UsersActivity extends AppCompatActivity {
 
 
 
-        FirebaseDatabase.getInstance().getReference().child("users").child("a@b").addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("users").child("emailList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 users.clear();
                 for (DataSnapshot emailFireBase : dataSnapshot.getChildren()) {
 
-                        String usera = dataSnapshot.child("email").getValue(String.class);
-                        //user = emailFireBase.getValue(User.class);
-                        users.add(usera);
+                        //String usera = emailFireBase.getValue(String.class);
+                        //String usera = dataSnapshot.child("isFollowing").child("0").getValue(String.class);
+                        user = emailFireBase.getValue(User.class);
+                        users.add(user.getEmail());
                         //hello = user.getFollowing();
                         //users.add(String.valueOf( hello.get(0)));
                         //Log.i("receive message",String.valueOf(hello.get(0)));
@@ -86,11 +91,11 @@ public class UsersActivity extends AppCompatActivity {
 
                     //Log.i("receive message",String.valueOf(nameList.get(1)));
                 }
-                for (DataSnapshot childSnapshot: dataSnapshot.child("is Following").getValue(String.class)) {
-                    System.out.println(childSnapshot.getValue(String.class));
-                    Log.i("whats inside",childSnapshot.getValue(String.class));
-                    hello = Collections.singletonList(childSnapshot.getValue(String.class));
-                }
+//                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+//                    System.out.println(childSnapshot.getValue(String.class));
+//                    Log.i("whats inside",childSnapshot.child("isFollowing").getValue(String.class));
+//                    hello = Collections.singletonList(childSnapshot.getValue(String.class));
+//                }
                 adapter.notifyDataSetChanged();
             }
             @Override
