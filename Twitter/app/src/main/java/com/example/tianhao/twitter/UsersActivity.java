@@ -18,6 +18,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -61,29 +62,33 @@ public class UsersActivity extends AppCompatActivity {
                 if (checkedTextView.isChecked()) {
                     Log.i("Info", "Checked!");
                     nameList.add(users.get(position));
+                    Log.i("after add",String.valueOf(nameList));
                     FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
-                   // Log.i("inside hello",String.valueOf(hello.get(0)));
-                    //Log.i("name list",String.valueOf(nameList.get(0)));
+
                 } else {
                     nameList.remove(users.get(position));
+                    Log.i("after remove",String.valueOf(nameList));
                     FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
                     Log.i("Info", "Not Checked!");
+
                 }
             }
         });
 
 
 
-        FirebaseDatabase.getInstance().getReference().child("users").child("emailList").addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 users.clear();
-                for (DataSnapshot emailFireBase : dataSnapshot.getChildren()) {
+                for (DataSnapshot emailFireBase : dataSnapshot.child("emailList").getChildren()) {
 
                         //String usera = emailFireBase.getValue(String.class);
                         //String usera = dataSnapshot.child("isFollowing").child("0").getValue(String.class);
                         user = emailFireBase.getValue(User.class);
                         users.add(user.getEmail());
+                        //GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
+                        //nameList = dataSnapshot.child("options").getValue(genericTypeIndicator);
                         //hello = user.getFollowing();
                         //users.add(String.valueOf( hello.get(0)));
                         //Log.i("receive message",String.valueOf(hello.get(0)));
@@ -91,17 +96,15 @@ public class UsersActivity extends AppCompatActivity {
 
                     //Log.i("receive message",String.valueOf(nameList.get(1)));
                 }
-//                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-//                    System.out.println(childSnapshot.getValue(String.class));
-//                    Log.i("whats inside",childSnapshot.child("isFollowing").getValue(String.class));
-//                    hello = Collections.singletonList(childSnapshot.getValue(String.class));
-//                }
+                List<String> children = dataSnapshot.child(currentLogINUser[0]).child("isFollowing").getValue(new GenericTypeIndicator<List<String>>(){});
+                Log.i("inside list is ", String.valueOf(children));
+
                 adapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-        //Log.i("name list",String.valueOf(nameList.get(0)));
+
     }
 
 }
