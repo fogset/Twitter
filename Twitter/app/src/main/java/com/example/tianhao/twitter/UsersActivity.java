@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -36,9 +39,26 @@ public class UsersActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     String[] currentLogINUser;
     User user;
-    String[] names = {"John","Tim","Sam","Ben"};
     List<String> nameList = new ArrayList();
     Boolean repeatedFollowing = false;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = new MenuInflater(this);
+        menuInflater.inflate(R.menu.tweet_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.tweet){
+
+        }else if (item.getItemId() == R.id.logout){
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
