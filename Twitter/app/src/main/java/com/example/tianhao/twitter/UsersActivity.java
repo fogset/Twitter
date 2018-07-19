@@ -1,5 +1,6 @@
 package com.example.tianhao.twitter;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +38,8 @@ public class UsersActivity extends AppCompatActivity {
     User user;
     String[] names = {"John","Tim","Sam","Ben"};
     List<String> nameList = new ArrayList();
-    List hello;
+    Boolean repeatedFollowing = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,14 +57,28 @@ public class UsersActivity extends AppCompatActivity {
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_checked, users);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @SuppressLint("LongLogTag")
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 if (checkedTextView.isChecked()) {
                     Log.i("Info", "Checked!");
-                    nameList.add(users.get(position));
                     Log.i("after add",String.valueOf(nameList));
-                    FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
+                    Log.i("repeatedFollowing before for loop", String.valueOf(repeatedFollowing));
+                    for (int s = 0; s<nameList.size(); s++){
+                        if(users.get(position).equals(nameList.get(s))){
+                            Log.i("sss inside nameList", String.valueOf(nameList.get(s)));
+                            Log.i("sss users get position", String.valueOf(users.get(position)));
+                            repeatedFollowing = true;
+                            Log.i("repeatedFollowing", String.valueOf(repeatedFollowing));
+                        }
+                    }
+                    Log.i("repeatedFollowing after for loop", String.valueOf(repeatedFollowing));
+                    if(repeatedFollowing == false){
+                        nameList.add(users.get(position));
+                        FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
+                    }
+                    repeatedFollowing = false;
 
                 } else {
                     Log.i("Info", "Not Checked!");
@@ -72,7 +88,6 @@ public class UsersActivity extends AppCompatActivity {
                 }
             }
         });
-
 
 
         FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
