@@ -47,7 +47,7 @@ public class UsersActivity extends AppCompatActivity {
         setTitle("User List");
 
         user = new User();
-        ListView listView = findViewById(R.id.userListView);
+        final ListView listView = findViewById(R.id.userListView);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -56,6 +56,29 @@ public class UsersActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_checked, users);
         listView.setAdapter(adapter);
+
+        FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                users.clear();
+                for (DataSnapshot emailFireBase : dataSnapshot.child("emailList").getChildren()) {
+                    user = emailFireBase.getValue(User.class);
+                    users.add(user.getEmail());
+                }
+                nameList= dataSnapshot.child(currentLogINUser[0]).child("isFollowing").getValue(new GenericTypeIndicator<List<String>>(){});
+                Log.i("inside namelist is ", String.valueOf(nameList));
+                for (String username: nameList){
+                    if(users.contains(username)){
+                        listView.setItemChecked(users.indexOf(username), true);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @SuppressLint("LongLogTag")
             @Override
@@ -63,17 +86,13 @@ public class UsersActivity extends AppCompatActivity {
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 if (checkedTextView.isChecked()) {
                     Log.i("Info", "Checked!");
-                    Log.i("after add",String.valueOf(nameList));
-                    Log.i("repeatedFollowing before for loop", String.valueOf(repeatedFollowing));
                     for (int s = 0; s<nameList.size(); s++){
                         if(users.get(position).equals(nameList.get(s))){
                             Log.i("sss inside nameList", String.valueOf(nameList.get(s)));
-                            Log.i("sss users get position", String.valueOf(users.get(position)));
                             repeatedFollowing = true;
                             Log.i("repeatedFollowing", String.valueOf(repeatedFollowing));
                         }
                     }
-                    Log.i("repeatedFollowing after for loop", String.valueOf(repeatedFollowing));
                     if(repeatedFollowing == false){
                         nameList.add(users.get(position));
                         FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
@@ -83,40 +102,12 @@ public class UsersActivity extends AppCompatActivity {
                 } else {
                     Log.i("Info", "Not Checked!");
                     nameList.remove(users.get(position));
-                    Log.i("after remove",String.valueOf(nameList));
                     FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
                 }
             }
         });
 
 
-        FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                users.clear();
-                for (DataSnapshot emailFireBase : dataSnapshot.child("emailList").getChildren()) {
-
-                        //String usera = emailFireBase.getValue(String.class);
-                        //String usera = dataSnapshot.child("isFollowing").child("0").getValue(String.class);
-                        user = emailFireBase.getValue(User.class);
-                        users.add(user.getEmail());
-                        //GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
-                        //nameList = dataSnapshot.child("options").getValue(genericTypeIndicator);
-                        //hello = user.getFollowing();
-                        //users.add(String.valueOf( hello.get(0)));
-                        //Log.i("receive message",String.valueOf(hello.get(0)));
-                        //usersName.add(tempUserName[0]);
-
-                    //Log.i("receive message",String.valueOf(nameList.get(1)));
-                }
-                nameList= dataSnapshot.child(currentLogINUser[0]).child("isFollowing").getValue(new GenericTypeIndicator<List<String>>(){});
-                Log.i("inside namelist is ", String.valueOf(nameList));
-
-                adapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
 
     }
 
