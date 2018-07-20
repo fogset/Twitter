@@ -1,9 +1,11 @@
 package com.example.tianhao.twitter;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +17,9 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,7 +57,26 @@ public class UsersActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.tweet){
-
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Send a Tweet");
+            final EditText tweetEditText = new EditText(this);
+            builder.setView(tweetEditText);
+            builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.i("Info", tweetEditText.getText().toString());
+                    FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("tweets").setValue(tweetEditText.getText().toString());
+                    Toast.makeText(UsersActivity.this, "Tweet sent!",Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.i("Info", "I don't wanna tweet!");
+                    dialog.cancel();
+                }
+            });
+            builder.show();
         }else if (item.getItemId() == R.id.logout){
             mAuth.signOut();
             Intent intent = new Intent(this, loginActivity.class);
