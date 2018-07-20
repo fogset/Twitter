@@ -81,6 +81,9 @@ public class UsersActivity extends AppCompatActivity {
             mAuth.signOut();
             Intent intent = new Intent(this, loginActivity.class);
             startActivity(intent);
+        }else if(item.getItemId() == R.id.viewFeed){
+            Intent intent = new Intent(this, FeedActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
