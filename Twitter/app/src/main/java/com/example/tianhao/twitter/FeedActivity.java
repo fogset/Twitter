@@ -35,7 +35,7 @@ public class FeedActivity extends AppCompatActivity {
         listView.setAdapter(simpleAdapter);
 
 
-        FirebaseDatabase.getInstance().getReference().child("users").child("tweetList").addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("users").child("emailList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersTweets.clear();
@@ -43,7 +43,7 @@ public class FeedActivity extends AppCompatActivity {
                     user = emailFireBase.getValue(User.class);
                     //usersTweets.add(user.getEmail());
                     tweetInfo.put("content", user.getTweets());
-                    tweetInfo.put("username", "a@b.com");
+                    tweetInfo.put("username", user.getEmail());
                     Log.i("tweets", user.getTweets());
                     tweetData.add(tweetInfo);
                     simpleAdapter.notifyDataSetChanged();
@@ -61,12 +61,7 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-
-//        for (int i = 1; i <= 5; i++) {
-//            tweetInfo.put("content", "Tweet Content" + Integer.toString(i));
-//            tweetInfo.put("username", "User" + Integer.toString(i));
-//            tweetData.add(tweetInfo);
-//        }
+        
     }
 
 }
