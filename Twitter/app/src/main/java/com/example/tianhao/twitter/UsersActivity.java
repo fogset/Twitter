@@ -65,7 +65,7 @@ public class UsersActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Log.i("Info", tweetEditText.getText().toString());
-                    FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("tweets").setValue(tweetEditText.getText().toString());
+                    FirebaseDatabase.getInstance().getReference().child("users").child("tweetList").child(currentLogINUser[0]).child("tweets").setValue(tweetEditText.getText().toString());
                     Toast.makeText(UsersActivity.this, "Tweet sent!",Toast.LENGTH_SHORT).show();
                 }
             });
@@ -113,6 +113,7 @@ public class UsersActivity extends AppCompatActivity {
                 for (DataSnapshot emailFireBase : dataSnapshot.child("emailList").getChildren()) {
                     user = emailFireBase.getValue(User.class);
                     users.add(user.getEmail());
+
                 }
                 nameList= dataSnapshot.child(currentLogINUser[0]).child("isFollowing").getValue(new GenericTypeIndicator<List<String>>(){});
                 Log.i("inside namelist is ", String.valueOf(nameList));

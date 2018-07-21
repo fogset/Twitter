@@ -1,24 +1,25 @@
 package com.example.tianhao.twitter;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class userTweets {
     private String email;
-    private String tweets;
+    private List<String> tweetList = new ArrayList();
 
-    public User(){
+    public userTweets(){
 
     }
 
-    public String getTweets() {
-        return tweets;
+    public userTweets(List<String> tweetList) {
+        this.tweetList = tweetList;
     }
 
-    public void setTweets(String tweets) {
-        this.tweets = tweets;
+    public userTweets(String email) {
+        this.email = email;
     }
+
+
 
     public String getEmail() {
         return email;
@@ -27,5 +28,4 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
 }
