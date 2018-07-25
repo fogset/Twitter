@@ -1,15 +1,26 @@
 package com.example.tianhao.twitter;
 
 
+import android.app.Application;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User{
     private String email;
     private String tweets;
+    public static ArrayList<String> usersTweets = new ArrayList<>();
 
     public User(){
 
+    }
+
+    public ArrayList<String> getUsersTweets() {
+        return usersTweets;
+    }
+
+    public void setUsersTweets(ArrayList<String> usersTweets) {
+        this.usersTweets = usersTweets;
     }
 
     public String getTweets() {

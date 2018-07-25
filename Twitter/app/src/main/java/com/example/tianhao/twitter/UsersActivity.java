@@ -102,6 +102,7 @@ public class UsersActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
         currentEmail = currentUser.getEmail();
         currentLogINUser = currentEmail.split("\\.");
+        setTitle(currentLogINUser[0]+ "'s user List");
 
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_checked, users);
         listView.setAdapter(adapter);
