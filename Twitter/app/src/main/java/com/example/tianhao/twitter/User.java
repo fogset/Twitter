@@ -8,22 +8,22 @@ import java.util.List;
 
 public class User{
     private String email;
-    private String tweets;
-    public static ArrayList<String> usersTweets = new ArrayList<>();
+    private static String tweets;
+    private static String entireTweets;
+
+    public static String getEntireTweets() {
+        return entireTweets;
+    }
+
+    public static void setEntireTweets(String entireTweets) {
+        User.entireTweets = entireTweets;
+    }
 
     public User(){
 
     }
 
-    public ArrayList<String> getUsersTweets() {
-        return usersTweets;
-    }
-
-    public void setUsersTweets(ArrayList<String> usersTweets) {
-        this.usersTweets = usersTweets;
-    }
-
-    public String getTweets() {
+    public  String getTweets() {
         return tweets;
     }
 
@@ -34,9 +34,7 @@ public class User{
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
 }

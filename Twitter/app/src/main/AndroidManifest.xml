@@ -3,7 +3,7 @@
     package="com.example.tianhao.twitter">
 
     <application
-        android:name=".User"
+        android:name =".UsersTweets"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
