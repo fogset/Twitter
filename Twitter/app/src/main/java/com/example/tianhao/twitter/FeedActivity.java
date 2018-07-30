@@ -3,6 +3,7 @@ package com.example.tianhao.twitter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,8 @@ public class FeedActivity extends AppCompatActivity {
      ArrayList<String> usersEmail = new ArrayList<>();
     ArrayAdapter adapter;
     SharedPreferences sharedPreferences;
+    String entireTweets ;
+    String entireEmailTweets;
     @SuppressLint("LongLogTag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +55,17 @@ public class FeedActivity extends AppCompatActivity {
         FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int i = 0;
+
                 String entireTweets = "";
+                String entireEmailTweets = "";
                 for (DataSnapshot emailFireBase : dataSnapshot.child("emailList").getChildren()) {
                     user = emailFireBase.getValue(User.class);
-                    usersEmail.add(user.getEmail());
                     entireTweets = entireTweets + "#" + user.getTweets();
-                    usersTweets.add(user.getTweets());
-                    Log.i("tweets", usersTweets.get(i));
-                    Log.i("email", usersEmail.get(i));
-                    i = i + 1;
+                    entireEmailTweets = entireTweets + "#" + user.getEmail();
                 }
 
-                sharedPreferences.edit().putString("wholeString", entireTweets).apply();
-                String wholeString = sharedPreferences.getString("wholeString","");
-                Log.i("emailaaa", wholeString);
-                mApp.setGlobalVarValue(wholeString);
-                Log.i("usersTweets ", String.valueOf(usersTweets));
-                Log.i("entireTweets", String.valueOf(entireTweets));
-                simpleAdapter.notifyDataSetChanged();
+                sharedPreferences.edit().putString("userTweets", entireTweets).apply();
+                sharedPreferences.edit().putString("userTweetsEmail", entireEmailTweets).apply();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -86,8 +81,7 @@ public class FeedActivity extends AppCompatActivity {
         //String wholeString = sharedPreferences.getString("wholeString","");
         //simpleAdapter.notifyDataSetChanged();
         //Log.i("emailaooo", wholeString);
-        //Log.i("emailssss", String.valueOf(user.getEmail()));
-        //Log.i("tweetsss", String.valueOf(user.getTweets()));
+
         //Log.i("second tweets outside class", String.valueOf(((UsersTweets)getApplicationContext()).getUsersTweets()));
         Log.i("global", mApp.getGlobalVarValue());
         Log.i("globalaa", "yes");
@@ -101,29 +95,33 @@ public class FeedActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        final Handler handler = new Handler();
-        Runnable run = new Runnable() {
-            @Override
-            public void run() {
-                String wholeString = sharedPreferences.getString("wholeString","");
-                Log.i("emailaoooR", wholeString);
-                handler.postDelayed(this,1000);
-            }
-        };
-        handler.post(run);
+
+        new CountDownTimer(1000,100){
+          public  void onTick(long millisecondsUntilDone){
+              Log.i("Seconds Left!", String.valueOf(millisecondsUntilDone/100));
+          }
+          public void onFinish(){
+              Log.i("We are done!", "No more countdown");
+              entireTweets = sharedPreferences.getString("userTweets","");
+              entireEmailTweets = sharedPreferences.getString("userTweetsEmail","");
+              Log.i("emailLList", entireEmailTweets);
+              Log.i("emailLTweet", entireTweets);
+          }
+        }.start();
+
+
+
+//                for (int i = 0; i<3; i++){
+//            //tweetInfo.put("content", usersTweets.get(i));
+//            //tweetInfo.put("username", usersEmail.get(i));
+//            Log.i("tweets", usersTweets.get(i));
+//            Log.i("email", usersEmail.get(i));
+//            //tweetData.add(tweetInfo);
+//            //simpleAdapter.notifyDataSetChanged();
+//        }
     }
 
-    @Override
-    protected void onResume() {
-        String wholeString = sharedPreferences.getString("wholeString","");
-        Log.i("emailaoooR", wholeString);
-        super.onResume();
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        String wholeString = sharedPreferences.getString("wholeString","");
-        Log.i("emailaoooP", wholeString);
-    }
+
+
 }
