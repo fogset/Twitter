@@ -3,6 +3,7 @@ package com.example.tianhao.twitter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,9 +46,6 @@ public class FeedActivity extends AppCompatActivity {
         sharedPreferences = this.getSharedPreferences("com.example.tianhao.twitter", Context.MODE_PRIVATE);
 
 
-
-
-
         final SimpleAdapter simpleAdapter = new SimpleAdapter(this, tweetData, android.R.layout.simple_list_item_2, new String[]{"content", "username"}, new int[]{android.R.id.text1, android.R.id.text2});
         listView.setAdapter(simpleAdapter);
 
@@ -59,7 +57,7 @@ public class FeedActivity extends AppCompatActivity {
                 for (DataSnapshot emailFireBase : dataSnapshot.child("emailList").getChildren()) {
                     user = emailFireBase.getValue(User.class);
                     usersEmail.add(user.getEmail());
-                    entireTweets = entireTweets + "#" + user.getTweets();
+                    entireTweets = entireTweets + "#" + user.getEmail();
                     usersTweets.add(user.getTweets());
                     Log.i("tweets", usersTweets.get(i));
                     Log.i("email", usersEmail.get(i));
@@ -103,8 +101,15 @@ public class FeedActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        String wholeString = sharedPreferences.getString("wholeString","");
-        Log.i("emailaooo", wholeString);
+        final Handler handler = new Handler();
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                String wholeString = sharedPreferences.getString("wholeString","");
+                Log.i("emailaoooR", wholeString);
+            }
+        };
+        handler.post(run);
     }
 
     @Override
