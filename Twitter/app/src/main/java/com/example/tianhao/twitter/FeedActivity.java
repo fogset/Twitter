@@ -57,7 +57,7 @@ public class FeedActivity extends AppCompatActivity {
                 for (DataSnapshot emailFireBase : dataSnapshot.child("emailList").getChildren()) {
                     user = emailFireBase.getValue(User.class);
                     usersEmail.add(user.getEmail());
-                    entireTweets = entireTweets + "#" + user.getEmail();
+                    entireTweets = entireTweets + "#" + user.getTweets();
                     usersTweets.add(user.getTweets());
                     Log.i("tweets", usersTweets.get(i));
                     Log.i("email", usersEmail.get(i));
@@ -107,6 +107,7 @@ public class FeedActivity extends AppCompatActivity {
             public void run() {
                 String wholeString = sharedPreferences.getString("wholeString","");
                 Log.i("emailaoooR", wholeString);
+                handler.postDelayed(this,1000);
             }
         };
         handler.post(run);
