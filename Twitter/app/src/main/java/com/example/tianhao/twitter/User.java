@@ -7,18 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User{
-    private String email;
+    private static String email;
     private static String tweets;
-    private static String entireTweets;
-
-    public static String getEntireTweets() {
-        return entireTweets;
-    }
-
-    public static void setEntireTweets(String entireTweets) {
-        User.entireTweets = entireTweets;
-    }
-
     public User(){
 
     }

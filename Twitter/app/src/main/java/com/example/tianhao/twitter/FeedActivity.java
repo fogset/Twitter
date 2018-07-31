@@ -61,7 +61,7 @@ public class FeedActivity extends AppCompatActivity {
                 for (DataSnapshot emailFireBase : dataSnapshot.child("emailList").getChildren()) {
                     user = emailFireBase.getValue(User.class);
                     entireTweets = entireTweets + "#" + user.getTweets();
-                    entireEmailTweets = entireTweets + "#" + user.getEmail();
+                    entireEmailTweets = entireEmailTweets + "#" + user.getEmail();
                 }
 
                 sharedPreferences.edit().putString("userTweets", entireTweets).apply();
@@ -96,9 +96,8 @@ public class FeedActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        new CountDownTimer(1000,100){
+        new CountDownTimer(2000,1000){
           public  void onTick(long millisecondsUntilDone){
-              Log.i("Seconds Left!", String.valueOf(millisecondsUntilDone/100));
           }
           public void onFinish(){
               Log.i("We are done!", "No more countdown");
