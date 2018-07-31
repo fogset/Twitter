@@ -43,14 +43,11 @@ public class FeedActivity extends AppCompatActivity {
         user = new User();
         mApp = (( UsersTweets)getApplicationContext());
 
-        final ListView listView = findViewById(R.id.listView);
-        final List<Map<String, String>> tweetData = new ArrayList<>();
-        final Map<String, String> tweetInfo = new HashMap<>();
+
         sharedPreferences = this.getSharedPreferences("com.example.tianhao.twitter", Context.MODE_PRIVATE);
 
 
-        final SimpleAdapter simpleAdapter = new SimpleAdapter(this, tweetData, android.R.layout.simple_list_item_2, new String[]{"content", "username"}, new int[]{android.R.id.text1, android.R.id.text2});
-        listView.setAdapter(simpleAdapter);
+
 
         FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
@@ -83,13 +80,7 @@ public class FeedActivity extends AppCompatActivity {
         //Log.i("emailaooo", wholeString);
 
         //Log.i("second tweets outside class", String.valueOf(((UsersTweets)getApplicationContext()).getUsersTweets()));
-        Log.i("global", mApp.getGlobalVarValue());
-        Log.i("globalaa", "yes");
-        for (int i = 1; i <= 5; i++) {
-            tweetInfo.put("content", "Tweet Content" + Integer.toString(i));
-            tweetInfo.put("username", "User" + Integer.toString(i));
-            tweetData.add(tweetInfo);
-        }
+
     }
 
     @Override
@@ -107,17 +98,21 @@ public class FeedActivity extends AppCompatActivity {
               Log.i("emailLTweet", entireTweets);
           }
         }.start();
+         ListView listView = findViewById(R.id.listView);
+         List<Map<String, String>> tweetData = new ArrayList<>();
+         Map<String, String> tweetInfo = new HashMap<>();
+
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this, tweetData, android.R.layout.simple_list_item_2, new String[]{"content", "username"}, new int[]{android.R.id.text1, android.R.id.text2});
+        listView.setAdapter(simpleAdapter);
+        for (int i = 1; i <= 5; i++) {
+            tweetInfo.put("content", "Tweet Content" + Integer.toString(i));
+            tweetInfo.put("username", "User" + Integer.toString(i));
+            tweetData.add(tweetInfo);
+        }
+        simpleAdapter.notifyDataSetChanged();
 
 
 
-//                for (int i = 0; i<3; i++){
-//            //tweetInfo.put("content", usersTweets.get(i));
-//            //tweetInfo.put("username", usersEmail.get(i));
-//            Log.i("tweets", usersTweets.get(i));
-//            Log.i("email", usersEmail.get(i));
-//            //tweetData.add(tweetInfo);
-//            //simpleAdapter.notifyDataSetChanged();
-//        }
     }
 
 
