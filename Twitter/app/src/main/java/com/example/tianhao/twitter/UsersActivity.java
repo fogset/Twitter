@@ -1,8 +1,11 @@
 package com.example.tianhao.twitter;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -46,6 +49,7 @@ public class UsersActivity extends AppCompatActivity {
     User user;
     List<String> nameList = new ArrayList();
     Boolean repeatedFollowing = false;
+    SharedPreferences sharedPreferences;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,11 +110,13 @@ public class UsersActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_checked, users);
         listView.setAdapter(adapter);
+        sharedPreferences = this.getSharedPreferences("com.example.tianhao.twitter", Context.MODE_PRIVATE);
 
         FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 users.clear();
+                String isFollowing = "";
                 for (DataSnapshot emailFireBase : dataSnapshot.child("emailList").getChildren()) {
                     user = emailFireBase.getValue(User.class);
                     users.add(user.getEmail());
@@ -119,10 +125,12 @@ public class UsersActivity extends AppCompatActivity {
                 nameList= dataSnapshot.child(currentLogINUser[0]).child("isFollowing").getValue(new GenericTypeIndicator<List<String>>(){});
                 Log.i("inside namelist is ", String.valueOf(nameList));
                 for (String username: nameList){
+                    isFollowing = isFollowing + "#" + username;
                     if(users.contains(username)){
                         listView.setItemChecked(users.indexOf(username), true);
                     }
                 }
+                sharedPreferences.edit().putString("userTweetsEmail", isFollowing).apply();
                 adapter.notifyDataSetChanged();
             }
             @Override
