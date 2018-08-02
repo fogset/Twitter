@@ -111,7 +111,8 @@ public class UsersActivity extends AppCompatActivity {
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_checked, users);
         listView.setAdapter(adapter);
         sharedPreferences = this.getSharedPreferences("com.example.tianhao.twitter", Context.MODE_PRIVATE);
-
+        nameList.add("empty");
+        FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
         FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -124,13 +125,14 @@ public class UsersActivity extends AppCompatActivity {
                 }
                 nameList= dataSnapshot.child(currentLogINUser[0]).child("isFollowing").getValue(new GenericTypeIndicator<List<String>>(){});
                 Log.i("inside namelist is ", String.valueOf(nameList));
-                for (String username: nameList){
-                    isFollowing = isFollowing + "#" + username;
-                    if(users.contains(username)){
-                        listView.setItemChecked(users.indexOf(username), true);
+                    for (String username: nameList){
+                        isFollowing = isFollowing + "#" + username;
+                        if(users.contains(username)){
+                            listView.setItemChecked(users.indexOf(username), true);
+                        }
                     }
-                }
-                sharedPreferences.edit().putString("userTweetsEmail", isFollowing).apply();
+                    sharedPreferences.edit().putString("userTweetsEmail", isFollowing).apply();
+
                 adapter.notifyDataSetChanged();
             }
             @Override
@@ -143,26 +145,28 @@ public class UsersActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CheckedTextView checkedTextView = (CheckedTextView) view;
-                if (checkedTextView.isChecked()) {
-                    Log.i("Info", "Checked!");
-                    for (int s = 0; s<nameList.size(); s++){
-                        if(users.get(position).equals(nameList.get(s))){
-                            Log.i("sss inside nameList", String.valueOf(nameList.get(s)));
-                            repeatedFollowing = true;
-                            Log.i("repeatedFollowing", String.valueOf(repeatedFollowing));
+
+                    if (checkedTextView.isChecked()) {
+                        Log.i("Info", "Checked!");
+                        for (int s = 0; s<nameList.size(); s++){
+                            if(users.get(position).equals(nameList.get(s))){
+                                Log.i("sss inside nameList", String.valueOf(nameList.get(s)));
+                                repeatedFollowing = true;
+                                Log.i("repeatedFollowing", String.valueOf(repeatedFollowing));
+                            }
                         }
-                    }
-                    if(repeatedFollowing == false){
-                        nameList.add(users.get(position));
+                        if(repeatedFollowing == false){
+                            nameList.add(users.get(position));
+                            FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
+                        }
+                        repeatedFollowing = false;
+
+                    } else {
+                        Log.i("Info", "Not Checked!");
+                        nameList.remove(users.get(position));
                         FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
                     }
-                    repeatedFollowing = false;
 
-                } else {
-                    Log.i("Info", "Not Checked!");
-                    nameList.remove(users.get(position));
-                    FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
-                }
             }
         });
 

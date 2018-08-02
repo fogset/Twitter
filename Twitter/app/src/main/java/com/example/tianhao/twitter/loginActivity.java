@@ -16,10 +16,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class loginActivity extends AppCompatActivity {
     EditText emailEdit, passwordEdit;
     String email, password;
     private FirebaseAuth mAuth;
+    List<String> emptyList = new ArrayList();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +55,8 @@ public class loginActivity extends AppCompatActivity {
                                 FirebaseDatabase.getInstance().getReference().child("users").child("emailList").child(username[0]).child("email").setValue(email);
                                 FirebaseDatabase.getInstance().getReference().child("users").child(username[0]).child("email").setValue(email);
                                 Toast.makeText(loginActivity.this, "createWithEmail:success",Toast.LENGTH_SHORT).show();
+                                emptyList.add("empty");
+                                FirebaseDatabase.getInstance().getReference().child("users").child(username[0]).child("isFollowing").setValue(emptyList);
                                 logIn();
                             } else {
                                 // If sign in fails, display a message to the user.
