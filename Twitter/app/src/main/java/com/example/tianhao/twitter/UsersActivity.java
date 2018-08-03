@@ -111,8 +111,6 @@ public class UsersActivity extends AppCompatActivity {
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_checked, users);
         listView.setAdapter(adapter);
         sharedPreferences = this.getSharedPreferences("com.example.tianhao.twitter", Context.MODE_PRIVATE);
-        nameList.add("empty");
-        FirebaseDatabase.getInstance().getReference().child("users").child(currentLogINUser[0]).child("isFollowing").setValue(nameList);
         FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
